@@ -72,7 +72,7 @@ module Swagger
               resources << generate_resource(ret[:path], ret[:apis], ret[:models], settings, root, config)
               debased_path = get_debased_path(ret[:path], settings[:controller_base_path])
               resource_api = {
-                path: "#{Config.transform_path(debased_path, api_version)}.{format}",
+                path: "#{Config.transform_path(trim_leading_slash(debased_path), api_version)}.{format}",
                 description: ret[:klass].swagger_config[:description]
               }
               root[:apis] << resource_api
@@ -184,7 +184,7 @@ module Swagger
           api_path = transform_spec_to_api_path(route_path, settings[:controller_base_path], config[:api_extension_type])
           operations[:parameters] = filter_path_params(api_path, operations[:parameters]) if operations[:parameters]
 
-          apis << {:path => api_path, :operations => [operations]}
+          apis << {:path => '/' + api_path, :operations => [operations]}
           models = get_klass_models(klass)
 
           {apis: apis, models: models, nickname: nickname}
